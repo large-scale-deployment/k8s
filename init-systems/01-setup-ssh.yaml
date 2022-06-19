@@ -26,6 +26,7 @@
 
     - name: Set up public key authentication for `servers` using inline script
       connection: local
+      # https://adamo.wordpress.com/2020/04/09/temporarily-disabling-an-ansible-task-in-a-playbook/
       when: 0 > 1
       shell: |
         exit 0
