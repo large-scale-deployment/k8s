@@ -1,0 +1,8 @@
+{% set ips = [] %}
+{%for server in groups['servers'] %}
+  {{ ips.append(hostvars[server]['ansible_host']) }}
+{% endfor %}
+for ip in {{ ips|join(' ') }}
+do 
+  ssh-copy-id -i $HOME/.ssh/*.pub ${USER}@${ip}
+done
