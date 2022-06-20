@@ -9,7 +9,6 @@
         creates: cluster_initialized.txt
 
     - name: create .kube directory
-      become: yes
       become_user: ubuntu
       file:
         path: $HOME/.kube
