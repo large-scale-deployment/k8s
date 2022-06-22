@@ -1,5 +1,5 @@
 {% set ips = [] %}
-{%for worker in groups['workers'] %}
+{%for worker in groups['workers'] + groups['control_plane'] %}
   {{ ips.append(hostvars[worker]['ansible_host']) }}
 {% endfor %}
 for ip in {{ ips|join(' ') }}

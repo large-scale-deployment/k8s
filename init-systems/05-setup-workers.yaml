@@ -11,14 +11,6 @@
       set_fact:
         join_command: "{{ join_command_raw.stdout_lines[0] }}"
 
-- hosts: workers
-  become: yes
-  tasks:
-    - name: Set a hostname
-      become: yes
-      ansible.builtin.hostname:
-        name: "{{ inventory_hostname }}"
-
 
 - hosts: workers
   become: yes

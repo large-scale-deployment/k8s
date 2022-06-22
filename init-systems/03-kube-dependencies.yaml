@@ -2,49 +2,77 @@
 - hosts: all
   become: yes
   tasks:
-   - name: create Docker config directory
-     file: path=/etc/docker state=directory
+- name: install Docker
+  hosts: all
+  become: true
+  tasks:
+    - name: Install apt-transport-https
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - lsb-release
+          - gnupg2
+          - curl
+        state: latest
+        update_cache: true
 
-   - name: changing Docker to systemd driver
-     copy:
-      dest: "/etc/docker/daemon.json"
-      content: |
-        {
-        "exec-opts": ["native.cgroupdriver=systemd"]
-        }
+    - name: Add signing key
+      ansible.builtin.apt_key:
+        url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+        state: present
 
-   - name: install Docker
-     apt:
-       name: docker.io
-       state: present
-       update_cache: true
+    - name: Add repository into sources list
+      ansible.builtin.apt_repository:
+        repo: "deb [arch={{ ansible_architecture }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
 
-   - name: install APT Transport HTTPS
-     apt:
-       name: apt-transport-https
-       state: present
+    - name: Install Docker
+      ansible.builtin.apt:
+        name:
+          - docker
+          - docker.io
+          - docker-compose
+          - docker-registry
+        state: latest
+        update_cache: true
+    - name: create Docker config directory
+      file: path=/etc/docker state=directory
 
-   - name: add Kubernetes apt-key
-     apt_key:
-       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-       state: present
+    - name: changing Docker to systemd driver
+      copy:
+        dest: "/etc/docker/daemon.json"
+        content: |
+          {
+          "exec-opts": ["native.cgroupdriver=systemd"]
+          }
+    - name: install APT Transport HTTPS
+      apt:
+        name: apt-transport-https
+        state: present
 
-   - name: add Kubernetes' APT repository
-     apt_repository:
-      repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
-      state: present
-      filename: 'kubernetes'
+    - name: add Kubernetes apt-key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
 
-   - name: install kubelet
-     apt:
-       name: kubelet=1.23.7-00
-       state: present
-       update_cache: true
+    - name: add Kubernetes' APT repository
+      apt_repository:
+        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+        filename: 'kubernetes'
 
-   - name: install kubeadm
-     apt:
-       name: kubeadm=1.23.7-00
-       state: present
+    - name: install kubelet
+      apt:
+        name: kubelet=1.23.7-00
+        state: present
+        update_cache: true
+
+    - name: install kubeadm
+      apt:
+        name: kubeadm=1.23.7-00
+        state: present
 
 - hosts: control_plane
   become: yes
@@ -54,3 +82,4 @@
        name: kubectl=1.23.7-00
        state: present
        force: yes
+

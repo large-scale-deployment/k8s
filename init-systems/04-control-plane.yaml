@@ -10,10 +10,10 @@
 
     - name: create .kube directory
       become_user: ubuntu
-      file:
+      ansible.builtin.file:
         path: $HOME/.kube
         state: directory
-        mode: 0755
+        mode: u+rw,g-rwx,o-rwx
 
     - name: copy admin.conf to user's kube config
       copy:

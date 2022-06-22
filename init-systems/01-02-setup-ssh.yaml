@@ -1,19 +1,6 @@
 ---
 - hosts: all
   tasks:
-    # https://www.codesandnotes.be/2020/01/13/generate-ssh-keys-using-ansible/
-    - name: generate SSH key id_rsa
-      connection: local
-      openssh_keypair:
-        path: "~/.ssh/id_rsa"
-        type: rsa
-        size: 4096
-        state: present
-        force: no
-    - name: set up authorized keys for the current user
-      authorized_key: user={{ lookup('env', 'USER') }} key="{{item}}"
-      with_file:
-        - ~/.ssh/id_rsa.pub
     # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html#examples
     - name: Create a .ssh directory for root
       become: yes

@@ -1,0 +1,13 @@
+- name: Load module
+  hosts: all
+  become: true
+  tasks:
+    - name: Add the overlay module
+      modprobe:
+        name: overlay
+        state: present
+
+    - name: Add the br_netfilter module
+      modprobe:
+        name: br_netfilter
+        state: present

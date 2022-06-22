@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html#examples
+    - name: set up authorized keys for the remote user
+      authorized_key: user={{ lookup('env', 'USER') }} key="{{item}}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
