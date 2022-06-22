@@ -2,7 +2,7 @@
   hosts: all
   become: true
   tasks:
-    - name: Install apt-transport-https
+    - name: Install packages
       ansible.builtin.apt:
         name:
           - apt-transport-https

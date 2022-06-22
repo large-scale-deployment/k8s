@@ -6,6 +6,13 @@
 - hosts: all
   become: yes
   tasks:
+    - name: Install packages
+      ansible.builtin.apt:
+        name:
+          - acl
+        state: latest
+        update_cache: true
+
     - name: create the 'ubuntu' user
       user: name=ubuntu append=yes state=present createhome=yes shell=/bin/bash
 
