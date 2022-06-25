@@ -1,13 +1,20 @@
-- name: Load module
+- name: Load overlay and br_netfilter module
   hosts: all
   become: true
   tasks:
-    - name: Add the overlay module
-      modprobe:
-        name: overlay
-        state: present
+    - name: Create containerd config file
+      file:
+        path: "/etc/modules-load.d/containerd.conf"
+        state: "touch"
 
-    - name: Add the br_netfilter module
-      modprobe:
-        name: br_netfilter
-        state: present
+    - name: Add conf for containerd
+      blockinfile:
+        path: "/etc/modules-load.d/containerd.conf"
+        block: |
+              overlay
+              br_netfilter
+
+    - name: modprobe
+      shell: |
+              sudo modprobe overlay
+              sudo modprobe br_netfilter

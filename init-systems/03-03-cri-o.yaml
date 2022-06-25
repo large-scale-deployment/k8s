@@ -62,5 +62,9 @@
     - name: Enable service crio
       ansible.builtin.service:
         name: crio
-        state: restarted
+        state: started
         enabled: yes
+
+    - name: Reboot after crio installed
+      ansible.builtin.reboot:
+        reboot_timeout: 60

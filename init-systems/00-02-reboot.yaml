@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+    - name: Reboot all
+      become: yes
+      ansible.builtin.reboot:
+        reboot_timeout: 30

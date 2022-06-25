@@ -1,7 +1,7 @@
-# Creates the non-root user ubuntu.
-# Configures the sudoers file to allow the ubuntu user to run sudo commands without a password prompt.
-# Adds the public key in your local machine (usually ~/.ssh/id_rsa.pub) to the remote ubuntu user’s authorized key list. 
-# This will allow you to SSH into each server as the ubuntu user.
+# Creates the non-root user kube.
+# Configures the sudoers file to allow the kube user to run sudo commands without a password prompt.
+# Adds the public key in your local machine (usually ~/.ssh/id_rsa.pub) to the remote kube user’s authorized key list. 
+# This will allow you to SSH into each server as the kube user.
 ---
 - hosts: all
   become: yes
@@ -13,17 +13,17 @@
         state: latest
         update_cache: true
 
-    - name: create the 'ubuntu' user
-      user: name=ubuntu append=yes state=present createhome=yes shell=/bin/bash
+    - name: create the 'kube' user
+      user: name=kube append=yes state=present createhome=yes shell=/bin/bash
 
-    - name: allow 'ubuntu' to have passwordless sudo
+    - name: allow 'kube' to have passwordless sudo
       lineinfile:
         dest: /etc/sudoers
-        line: 'ubuntu ALL=(ALL) NOPASSWD: ALL'
+        line: 'kube ALL=(ALL) NOPASSWD: ALL'
         validate: 'visudo -cf %s'
 
-    - name: set up authorized keys for the ubuntu user
-      authorized_key: user=ubuntu key="{{item}}"
+    - name: set up authorized keys for the kube user
+      authorized_key: user=kube key="{{item}}"
       with_file:
         - ~/.ssh/id_rsa.pub
 
